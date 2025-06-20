@@ -1,0 +1,47 @@
+import streamlit as st
+import requests
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# --- Title of the Dashboard ---
+st.title("🌦️ Weather Dashboard using OpenWeatherMap API")
+
+# --- Input: City Name ---
+city = st.text_input("Enter city name", "Mumbai")
+
+# --- Input: API Key (Hide in real app) ---
+api_key = st.text_input("Enter your OpenWeatherMap API Key", type="password")
+
+# --- Fetch Data Button ---
+if st.button("Get Weather Data") and city and api_key:
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        main = data['main']
+        weather_data = {
+            'Temperature (°C)': main['temp'],
+            'Feels Like (°C)': main['feels_like'],
+            'Min Temp (°C)': main['temp_min'],
+            'Max Temp (°C)': main['temp_max'],
+            'Humidity (%)': main['humidity']
+        }
+
+        st.success(f"Weather data for {city} fetched successfully!")
+
+        # Display Data
+        st.subheader("Weather Metrics:")
+        for k, v in weather_data.items():
+            st.write(f"{k}: {v}")
+
+        # Plot Graph
+        st.subheader("📊 Weather Data Visualization:")
+        fig, ax = plt.subplots(figsize=(8, 5))
+        sns.barplot(x=list(weather_data.keys()), y=list(weather_data.values()), palette="coolwarm", ax=ax)
+        plt.xticks(rotation=45)
+        plt.title(f"Weather Overview for {city}")
+        st.pyplot(fig)
+    
+    else:
+        st.error("Error fetching data. Please check your API key or city name.")
