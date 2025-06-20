@@ -1,0 +1,47 @@
+import requests
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Replace with your actual API key
+API_KEY = 'your_api_key_here'
+CITY = 'Mumbai'
+URL = f"http://api.openweathermap.org/data/2.5/weather?q={CITY}&appid={API_KEY}&units=metric"
+
+response = requests.get(URL)
+data = response.json()
+
+# Extract relevant data
+main = data['main']
+weather_data = {
+    'Temperature (°C)':import requests
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Replace with your actual API key
+API_KEY = 'your_api_key_here'
+CITY = 'Mumbai'
+URL = f"http://api.openweathermap.org/data/2.5/weather?q={CITY}&appid={API_KEY}&units=metric"
+
+response = requests.get(URL)
+data = response.json()
+
+# Extract relevant data
+main = data['main']
+weather_data = {
+    'Temperature (°C)': main['temp'],
+    'Feels Like (°C)': main['feels_like'],
+    'Min Temp (°C)': main['temp_min'],
+    'Max Temp (°C)': main['temp_max'],
+    'Humidity (%)': main['humidity']
+}
+
+# Visualization
+labels = list(weather_data.keys())
+values = list(weather_data.values())
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x=labels, y=values, palette="viridis")
+plt.title(f"Weather Data for {CITY}")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
